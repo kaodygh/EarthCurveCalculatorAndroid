@@ -22,7 +22,7 @@
 			android:layout_height="?attr/actionBarSize"
 			bind:contentInsetLeft="@dimen/padding_small"
 			bind:contentInsetStart="@dimen/padding_small"
-			bind:title="Curve Calculator"
+			bind:title="Earth Curve Calc"
 			/>
 		<android.support.v7.widget.CardView
 			android:layout_width="match_parent"
