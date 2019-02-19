@@ -34,9 +34,6 @@ public class CurveCalcViewModel extends ViewModel implements Observable
 
 	private double userHeight;
 
-	private double r;  // radius            (metres or feet)
-	private double rr; // refractive radius (metres or feet)
-
 
 	public void setGroupieAdapter(GroupAdapter groupieAdapter)
 	{
