@@ -5,13 +5,12 @@ import android.databinding.Bindable;
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
 
 import com.xwray.groupie.GroupAdapter;
 
-import earth.curve.calculator.model.UnitConfig;
+import earth.curve.calculator.model.UnitPref;
 
 import static earth.curve.calculator.Calc.DF5;
 
@@ -27,7 +26,7 @@ public class CurveCalcViewModel extends ViewModel implements Observable
 	double meters2Feet  = 3.28084;
 	double kiloms2Miles = 0.621371;
 
-	private UnitConfig mUnit;
+	private UnitPref mUnit;
 
 	private double distance;
 
@@ -142,14 +141,14 @@ public class CurveCalcViewModel extends ViewModel implements Observable
 		notifyPropertyChanged(earth.curve.calculator.BR.height);
 	}
 
-	private UnitConfig getImperialConfig()
+	private UnitPref getImperialConfig()
 	{
-		return new UnitConfig(true, 5280,"Miles", "Feet", 0, 0);
+		return new UnitPref(true, 5280,"Miles", "Feet", 0, 0);
 	}
 
-	private UnitConfig getMetricConfig()
+	private UnitPref getMetricConfig()
 	{
-		return new UnitConfig(false, 1000,"Kilometers", "Meters", 1.0 / meters2Feet, 1.0 / kiloms2Miles);
+		return new UnitPref(false, 1000,"Kilometers", "Meters", 1.0 / meters2Feet, 1.0 / kiloms2Miles);
 	}
 
 	@Bindable

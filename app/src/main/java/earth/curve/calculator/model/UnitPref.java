@@ -1,7 +1,7 @@
 package earth.curve.calculator.model;
 
 
-public class UnitConfig
+public class UnitPref
 {
 	private boolean mIsImperial;
 
@@ -11,7 +11,7 @@ public class UnitConfig
 	private double mSmallMult;
 	private double mBigMult;
 
-	public UnitConfig(boolean isImperial, int per, String bigUnits, String smallUnits, double smallMult, double bigMult)
+	public UnitPref(boolean isImperial, int per, String bigUnits, String smallUnits, double smallMult, double bigMult)
 	{
 		mIsImperial = isImperial;
 		mPer = per;
