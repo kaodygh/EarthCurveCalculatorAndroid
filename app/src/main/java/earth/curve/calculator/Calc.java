@@ -5,10 +5,6 @@ import android.util.Log;
 import java.text.DecimalFormat;
 
 
-/**
- * Created by Zel <mancdev@gmail.com> on 19/02/19.
- */
-
 public class Calc
 {
 	private static final String TAG = Calc.class.getSimpleName();
