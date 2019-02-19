@@ -1,9 +1,9 @@
-package tool.dox.com.test;
+package earth.curve.calculator;
 
 
 import com.xwray.groupie.databinding.BindableItem;
 
-import tool.dox.com.test.databinding.ItemSectionTitleBinding;
+import earth.curve.calculator.databinding.ItemSectionTitleBinding;
 
 
 public class SectionTitleItemHolder extends BindableItem<ItemSectionTitleBinding>
@@ -12,7 +12,7 @@ public class SectionTitleItemHolder extends BindableItem<ItemSectionTitleBinding
 
 	public SectionTitleItemHolder(String title)
 	{
-		mTitle   = title;
+		mTitle = title;
 	}
 
 	@Override

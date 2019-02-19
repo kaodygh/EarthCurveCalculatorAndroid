@@ -1,4 +1,4 @@
-package tool.dox.com.test;
+package earth.curve.calculator;
 
 import android.content.Context;
 import android.content.res.Resources;

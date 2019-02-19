@@ -1,9 +1,9 @@
-package tool.dox.com.test;
+package earth.curve.calculator;
 
 
 import com.xwray.groupie.databinding.BindableItem;
 
-import tool.dox.com.test.databinding.ItemCalcBinding;
+import earth.curve.calculator.databinding.ItemCalcBinding;
 
 
 public class CalcItemHolder extends BindableItem<ItemCalcBinding>

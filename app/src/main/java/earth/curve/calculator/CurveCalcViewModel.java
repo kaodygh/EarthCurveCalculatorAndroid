@@ -1,4 +1,4 @@
-package tool.dox.com.test;
+package earth.curve.calculator;
 
 import android.arch.lifecycle.ViewModel;
 import android.databinding.Bindable;
@@ -10,7 +10,9 @@ import android.widget.RadioGroup;
 
 import com.xwray.groupie.GroupAdapter;
 
-import static tool.dox.com.test.Calc.DF5;
+import earth.curve.calculator.SectionTitleItemHolder;
+
+import static earth.curve.calculator.Calc.DF5;
 
 
 public class CurveCalcViewModel extends ViewModel implements Observable
@@ -181,10 +183,10 @@ public class CurveCalcViewModel extends ViewModel implements Observable
 			mBigMult    = 1.0 / mKiloms2Meters;
 		}
 
-		notifyPropertyChanged(BR.distanceHeader);
-		notifyPropertyChanged(BR.heightHeader);
-		notifyPropertyChanged(BR.distance);
-		notifyPropertyChanged(BR.height);
+		notifyPropertyChanged(earth.curve.calculator.BR.distanceHeader);
+		notifyPropertyChanged(earth.curve.calculator.BR.heightHeader);
+		notifyPropertyChanged(earth.curve.calculator.BR.distance);
+		notifyPropertyChanged(earth.curve.calculator.BR.height);
 
 	}
 
