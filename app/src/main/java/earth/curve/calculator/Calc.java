@@ -69,9 +69,6 @@ public class Calc
 	{
 		if(imperial){
 
-			Log.d(TAG, "HEREHERE: " + value);
-			//Log.d(TAG, "!!!value: " + value);
-
 			double inches = (value*12*100)/100;
 			double feet   = (value*100)/100;
 			double miles  = (value/5280*100)/100;
