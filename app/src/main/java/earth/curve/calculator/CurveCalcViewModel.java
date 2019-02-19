@@ -24,7 +24,7 @@ public class CurveCalcViewModel extends ViewModel implements Observable
 
 	private boolean mIsImperial = true;
 
-	private int    mPer           = 5280;
+	private int    mPer           = 5280;//
 	private String mBigUnits      = "Miles";
 	private String mSmallUnits    = "Feet";
 	private double mSmallMult     = 0;
@@ -205,11 +205,6 @@ public class CurveCalcViewModel extends ViewModel implements Observable
 	public void removeOnPropertyChangedCallback(Observable.OnPropertyChangedCallback callback)
 	{
 		callbacks.remove(callback);
-	}
-
-	void notifyChange()
-	{
-		callbacks.notifyCallbacks(this, 0, null);
 	}
 
 	void notifyPropertyChanged(int fieldId)
