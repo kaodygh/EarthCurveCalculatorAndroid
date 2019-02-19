@@ -7,7 +7,7 @@
 	<data>
 		<variable
 			name="viewmodel"
-			type="tool.dox.com.test.CurveCalcViewModel"
+			type="earth.curve.calculator.CurveCalcViewModel"
 			/>
 	</data>
 
@@ -22,7 +22,7 @@
 			android:layout_height="?attr/actionBarSize"
 			bind:contentInsetLeft="@dimen/padding_small"
 			bind:contentInsetStart="@dimen/padding_small"
-			bind:title="Curve Calculator"
+			bind:title="Earth Curve Calc"
 			/>
 		<android.support.v7.widget.CardView
 			android:layout_width="match_parent"
@@ -40,7 +40,7 @@
 				android:orientation="vertical"
 				>
 				<LinearLayout
-					android:layout_width="wrap_content"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"
 					android:orientation="horizontal"
@@ -59,12 +59,13 @@
 							/>
 						<EditText
 							android:id="@+id/distance"
-							android:layout_width="200dp"
+							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:digits=".0123456789"
 							android:inputType="numberDecimal"
 							android:onTextChanged="@{viewmodel.onDistanceChanged}"
 							android:text="@{Double.parseDouble(viewmodel.distance) == 0.0 ? `` : viewmodel.distance}"
+							android:textSize="@dimen/textsize_medium"
 							/>
 					</LinearLayout>
 					<LinearLayout
@@ -81,21 +82,23 @@
 							/>
 						<EditText
 							android:id="@+id/height"
-							android:layout_width="200dp"
+							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
+							android:digits=".0123456789"
 							android:inputType="numberDecimal"
 							android:onTextChanged="@{viewmodel.onHeightChanged}"
 							android:text="@{Double.parseDouble(viewmodel.height) == 0.0 ? `` : viewmodel.height}"
+							android:textSize="@dimen/textsize_medium"
 							/>
 					</LinearLayout>
 				</LinearLayout>
 				<LinearLayout
-					android:layout_width="wrap_content"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical"
 					android:layout_weight="1"
 					android:gravity="center_horizontal"
-					android:orientation="vertical"
+					android:orientation="horizontal"
 					>
 					<RadioGroup
 						android:id="@+id/units_rg"
@@ -119,6 +122,12 @@
 							android:text="metric"
 							/>
 					</RadioGroup>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Clear"
+						android:onClick="@{viewmodel.clearClicked}"
+						/>
 				</LinearLayout>
 			</LinearLayout>
 		</android.support.v7.widget.CardView>
@@ -132,112 +141,5 @@
 			bind:layoutManager="LinearLayoutManager"
 			tools:listitem="@layout/item_calc"
 			/><!-- android:alpha="@{mission.job.status.contains(`cancelled`) ? 0.3f : 1f}" -->
-
-		<!--<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			android:padding="@dimen/padding_large"
-			>
-			<TextView
-				android:id="@+id/dist"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				tools:text="Distance: 100"
-				/>
-			<TextView
-				android:id="@+id/vheight"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				tools:text="Viewer Height: 10"
-				/>
-			<TextView
-				android:id="@+id/radius"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				tools:text="Radius: 6371"
-				/>
-
-
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/padding_xlarge"
-				android:textStyle="bold"
-				tools:text="Results ignoring refraction"
-				/>
-			<TextView
-				android:id="@+id/horizon"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/padding_large"
-				tools:text="Horizon = 11.29 km (11288.05 m)"
-				/>
-			<TextView
-				android:id="@+id/bulge"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/padding_large"
-				tools:text="Bulge = 196.2 meters"
-				/>
-			<TextView
-				android:id="@+id/drop"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/padding_large"
-				tools:text="Drop = 784.85 meters"
-				/>
-			<TextView
-				android:id="@+id/hidden"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/padding_large"
-				tools:text="Hidden = 617.6 meters"
-				/>
-			<TextView
-				android:id="@+id/horizon_dip"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/padding_large"
-				tools:text="Horizon Dip = 0.102 Degrees, (0.0018 Radians)"
-				/>
-
-
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/padding_xlarge"
-				android:textStyle="bold"
-				tools:text="With Standard Refraction 7/6*r, radius = 7432.83 km (7432833.33 m)"
-				/>
-			<TextView
-				android:id="@+id/ref_horizon"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/padding_large"
-				tools:text="Horizon = 12.19 km (12192.49 m)"
-				/>
-			<TextView
-				android:id="@+id/ref_drop"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/padding_large"
-				tools:text="Drop= 672.72 meters"
-				/>
-			<TextView
-				android:id="@+id/ref_hidden"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/padding_large"
-				tools:text="Hidden= 518.64 meters"
-				/>
-			<TextView
-				android:id="@+id/ref_horizon_dip"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/padding_large"
-				tools:text="Horizon Dip = 0.094 Degrees, (0.0016 Radians)"
-				/>
-		</LinearLayout>-->
 	</LinearLayout>
 </layout>

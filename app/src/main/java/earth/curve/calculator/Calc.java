@@ -1,13 +1,9 @@
-package tool.dox.com.test;
+package earth.curve.calculator;
 
 import android.util.Log;
 
 import java.text.DecimalFormat;
 
-
-/**
- * Created by Zel <mancdev@gmail.com> on 19/02/19.
- */
 
 public class Calc
 {
@@ -68,9 +64,6 @@ public class Calc
 	private String[] distanceString(double value)
 	{
 		if(imperial){
-
-			Log.d(TAG, "HEREHERE: " + value);
-			//Log.d(TAG, "!!!value: " + value);
 
 			double inches = (value*12*100)/100;
 			double feet   = (value*100)/100;

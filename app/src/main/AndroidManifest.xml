@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="tool.dox.com.test"
+<manifest package="earth.curve.calculator"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	>
 
@@ -11,8 +11,6 @@
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme"
 		>
-		<activity android:name=".MainActivity">
-		</activity>
 
 		<activity
 			android:name=".CurveCalculatorActivity"

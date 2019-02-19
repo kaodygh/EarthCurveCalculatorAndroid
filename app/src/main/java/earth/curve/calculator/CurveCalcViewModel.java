@@ -1,16 +1,18 @@
-package tool.dox.com.test;
+package earth.curve.calculator;
 
 import android.arch.lifecycle.ViewModel;
 import android.databinding.Bindable;
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.View;
 import android.widget.RadioGroup;
 
 import com.xwray.groupie.GroupAdapter;
 
-import static tool.dox.com.test.Calc.DF5;
+import earth.curve.calculator.model.UnitPref;
+
+import static earth.curve.calculator.Calc.DF5;
 
 
 public class CurveCalcViewModel extends ViewModel implements Observable
@@ -21,38 +23,19 @@ public class CurveCalcViewModel extends ViewModel implements Observable
 
 	private GroupAdapter mGroupieAdapter;
 
-	private boolean mIsImperial = true;
+	double meters2Feet  = 3.28084;
+	double kiloms2Miles = 0.621371;
 
-	private int    mPer           = 5280;
-	private String mBigUnits      = "Miles";
-	private String mSmallUnits    = "Feet";
-	private double mMeters2Feet   = 3.28084;  // meters to feet
-	private double mKiloms2Meters = 0.621371; // km to miles
-	private double mSmallMult     = 0;
-	private double mBigMult       = 0;
-
+	private UnitPref mUnit;
 
 	private double distance;
 
 	private double userHeight;
 
-	private double r;  // radius            (metres or feet)
-	private double rr; // refractive radius (metres or feet)
-
-	/* Without refraction */
-	double distanceToHorizon;
-	double hidden;
-	double bulge;
-	double drop;
-	double dipRadians;
-	double dipDegrees;
-
-	/* standard refraction */
-	double refDistanceToHorizon;
-	double refHidden;
-	double refDrop;
-	double refDipRadians;
-	double refDipDegrees;
+	public CurveCalcViewModel()
+	{
+		mUnit = getImperialConfig();
+	}
 
 	public void setGroupieAdapter(GroupAdapter groupieAdapter)
 	{
@@ -64,7 +47,6 @@ public class CurveCalcViewModel extends ViewModel implements Observable
 		if(TextUtils.isEmpty(s)){
 			return;
 		}
-		Log.d(TAG, "onDistanceChanged " + s);
 		distance = Double.parseDouble(s.toString());
 		computeCurve();
 	}
@@ -74,65 +56,47 @@ public class CurveCalcViewModel extends ViewModel implements Observable
 		if(TextUtils.isEmpty(s)){
 			return;
 		}
-		Log.d(TAG, "onHeightChanged " + s);
 		userHeight = Double.parseDouble(s.toString());
 		computeCurve();
 	}
 
 	public void onUnitUpdated(RadioGroup group, int checkedId)
 	{
-		Log.d(TAG, "onUnitUpdated " + checkedId);
-
-		mIsImperial = (checkedId == R.id.imperial);
-		Log.d(TAG, "!!!: " + (mIsImperial ? "imperial" : "metric"));
-
-
-
-		updateUnits();
-
+		updateUnits((checkedId == R.id.imperial));
 		computeCurve();
+	}
+
+	public void clearClicked(View view)
+	{
+		setDistance(0.0);
+		setUserHeight(0.0);
+		mGroupieAdapter.clear();
 	}
 
 	public void computeCurve()
 	{
 		if(distance == 0 || userHeight == 0){
-			Log.d(TAG, "!!!Cannot have zero values!");
 			return;
 		}
 
-		StringBuilder output = new StringBuilder();
+		double distanceInUnits =  distance * mUnit.getPer();  // distance in feet or meters
 
-		double distanceInUnits =  distance * mPer;  // distance in feet or meters
+		int rVal = mUnit.isImperial() ? 3959 : 6371;
 
-		int rVal = mIsImperial ? 3959 : 6371;
-
-		double r = rVal * mPer; // radius of the earth in (feet or meters)
+		double r = rVal * mUnit.getPer(); // radius of the earth in (feet or meters)
 
 		double rr  = 7.0 / 6.0 * r;
 
-		distanceToHorizon = Math.sqrt((r+userHeight)*(r+userHeight) - r*r); // distance to horizon (feet or meters)
-		hidden            = Math.sqrt(distanceToHorizon*distanceToHorizon - 2*distanceToHorizon*distanceInUnits + distanceInUnits*distanceInUnits + r* r)- r;
-		bulge             = r-Math.sqrt(4* r* r - distanceInUnits*distanceInUnits)/2;
-		drop              = r-Math.sqrt(r* r-distanceInUnits*distanceInUnits);
-		dipRadians        = Math.asin(distanceToHorizon/(r+userHeight));
-		dipDegrees        = dipRadians * 180 / Math.PI;
-
-		refDistanceToHorizon = Math.sqrt((rr+userHeight)*(rr+userHeight) - rr*rr); // refracted distance to horizon (feet or meters)
-		refHidden            = Math.sqrt(refDistanceToHorizon*refDistanceToHorizon - 2*refDistanceToHorizon*distanceInUnits + distanceInUnits*distanceInUnits + rr*rr)-rr;
-		refDrop              = rr-Math.sqrt(rr*rr-distanceInUnits*distanceInUnits);
-		refDipRadians        = Math.asin(refDistanceToHorizon/(rr+userHeight));
-		refDipDegrees        = refDipRadians * 180 / Math.PI;
-
 		mGroupieAdapter.clear();
 
-		Calc calc = new Calc(mIsImperial, distanceInUnits, userHeight, r, rr);
+		Calc calc = new Calc(mUnit.isImperial(), distanceInUnits, userHeight, r, rr);
 
-		mGroupieAdapter.add(new SectionTitleItemHolder("Observer Details"));
+		mGroupieAdapter.add(new SectionTitleItemHolder("Observer"));
 		mGroupieAdapter.add(new CalcItemHolder("Distance",      calc.getDistanceText()));
 		mGroupieAdapter.add(new CalcItemHolder("Viewer Height", calc.getViewerHeightText()));
 		mGroupieAdapter.add(new CalcItemHolder("Radius",        calc.getRText()));
 
-		mGroupieAdapter.add(new SectionTitleItemHolder("Without Refraction"));
+		mGroupieAdapter.add(new SectionTitleItemHolder("Without Standard Refraction"));
 		mGroupieAdapter.add(new CalcItemHolder("Horizon",       calc.getDistanceToHorizon()));
 		mGroupieAdapter.add(new CalcItemHolder("Bulge",         calc.getBulgeText()));
 		mGroupieAdapter.add(new CalcItemHolder("Drop",          calc.getDropText()));
@@ -145,7 +109,7 @@ public class CurveCalcViewModel extends ViewModel implements Observable
 		mGroupieAdapter.add(new CalcItemHolder("Hidden",        calc.getRefHiddenText()));
 		mGroupieAdapter.add(new CalcItemHolder("Dip",           calc.getRefDipText()));
 
-		mGroupieAdapter.add(new SectionTitleItemHolder("More..."));
+		mGroupieAdapter.add(new SectionTitleItemHolder("Extra..."));
 		mGroupieAdapter.add(new CalcItemHolder("Tilt Angle",    calc.getTiltText()));
 
 		double fovRadians   = Math.toRadians(60);
@@ -160,62 +124,69 @@ public class CurveCalcViewModel extends ViewModel implements Observable
 		mGroupieAdapter.add(new CalcItemHolder("Horizon Curve Fraction", new String[]{DF5.format(dropFraction),                 ""}));
 		mGroupieAdapter.add(new CalcItemHolder("Horizon Curve Angle v1", new String[]{DF5.format(Math.toDegrees(dropAngle)),    ""}));
 		mGroupieAdapter.add(new CalcItemHolder("Horizon Curve Angle v2", new String[]{DF5.format(Math.toDegrees(dropAngle2)),   ""}));
-
-		Log.d(TAG, "!!! " + output.toString());
 	}
 
-	private void updateUnits()
+	private void updateUnits(boolean isImperial)
 	{
-		if(mIsImperial){
-			mPer        = 5280;  // feet per mile
-			mBigUnits   = "Miles";
-			mSmallUnits = "Feet";
-			mSmallMult  = mMeters2Feet;
-			mBigMult    = mKiloms2Meters;
+		if(isImperial){
+			mUnit = getImperialConfig();
 		}
 		else{
-			mPer        = 1000; // m per km
-			mBigUnits   = "Kilometers";
-			mSmallUnits = "Meters";
-			mSmallMult  = 1.0 / mMeters2Feet;
-			mBigMult    = 1.0 / mKiloms2Meters;
+			mUnit = getMetricConfig();
 		}
 
-		notifyPropertyChanged(BR.distanceHeader);
-		notifyPropertyChanged(BR.heightHeader);
-		notifyPropertyChanged(BR.distance);
-		notifyPropertyChanged(BR.height);
+		notifyPropertyChanged(earth.curve.calculator.BR.distanceHeader);
+		notifyPropertyChanged(earth.curve.calculator.BR.heightHeader);
+		notifyPropertyChanged(earth.curve.calculator.BR.distance);
+		notifyPropertyChanged(earth.curve.calculator.BR.height);
+	}
 
+	private UnitPref getImperialConfig()
+	{
+		return new UnitPref(true, 5280,"Miles", "Feet", 0, 0);
+	}
+
+	private UnitPref getMetricConfig()
+	{
+		return new UnitPref(false, 1000,"Kilometers", "Meters", 1.0 / meters2Feet, 1.0 / kiloms2Miles);
 	}
 
 	@Bindable
 	public void setDistance(double d)
 	{
 		distance = d;
+		notifyPropertyChanged(BR.distance);
+	}
+
+	@Bindable
+	public void setUserHeight(double uh)
+	{
+		userHeight = uh;
+		notifyPropertyChanged(BR.height);
 	}
 
 	@Bindable
 	public String getDistance()
 	{
-		return String.valueOf(mBigMult * distance);
+		return String.valueOf(mUnit.getBigMult() * distance);
 	}
 
 	@Bindable
 	public String getHeight()
 	{
-		return String.valueOf(mSmallMult * userHeight);
+		return String.valueOf(mUnit.getSmallMult() * userHeight);
 	}
 
 	@Bindable
 	public String getDistanceHeader()
 	{
-		return "Distance in " + mBigUnits;
+		return "Distance in " + mUnit.getBigUnits();
 	}
 
 	@Bindable
 	public String getHeightHeader()
 	{
-		return "Height in " + mSmallUnits;
+		return "Height in " + mUnit.getSmallUnits();
 	}
 
 	@Override
@@ -226,27 +197,16 @@ public class CurveCalcViewModel extends ViewModel implements Observable
 	}
 
 	@Override
-	public void removeOnPropertyChangedCallback(
-		Observable.OnPropertyChangedCallback callback)
+	public void removeOnPropertyChangedCallback(Observable.OnPropertyChangedCallback callback)
 	{
 		callbacks.remove(callback);
 	}
 
-	/**
-	 * Notifies observers that all properties of this instance have changed.
-	 */
 	void notifyChange()
 	{
 		callbacks.notifyCallbacks(this, 0, null);
 	}
 
-	/**
-	 * Notifies observers that a specific property has changed. The getter for the
-	 * property that changes should be marked with the @Bindable annotation to
-	 * generate a field in the BR class to be used as the fieldId parameter.
-	 *
-	 * @param fieldId The generated BR id for the Bindable field.
-	 */
 	void notifyPropertyChanged(int fieldId)
 	{
 		callbacks.notifyCallbacks(this, fieldId, null);
