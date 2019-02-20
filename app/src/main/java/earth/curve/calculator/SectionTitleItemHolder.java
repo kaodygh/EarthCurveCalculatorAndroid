@@ -1,6 +1,6 @@
 package earth.curve.calculator;
 
-
+import earth.curve.calculator.R;
 import com.xwray.groupie.databinding.BindableItem;
 
 import earth.curve.calculator.databinding.ItemSectionTitleBinding;

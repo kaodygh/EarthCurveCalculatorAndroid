@@ -11,7 +11,9 @@ import android.widget.RadioGroup;
 
 import com.xwray.groupie.GroupAdapter;
 
-import static earth.curve.calculator.Calc.DF5;
+import earth.curve.calculator.model.Calc;
+
+import static earth.curve.calculator.model.Calc.DF5;
 
 
 public class CurveCalcViewModel extends ViewModel implements Observable
@@ -24,7 +26,7 @@ public class CurveCalcViewModel extends ViewModel implements Observable
 
 	private boolean mIsImperial = true;
 
-	private int    mPer           = 5280;//
+	private int    mPer           = 5280;
 	private String mBigUnits      = "Miles";
 	private String mSmallUnits    = "Feet";
 	private double mSmallMult     = 0;

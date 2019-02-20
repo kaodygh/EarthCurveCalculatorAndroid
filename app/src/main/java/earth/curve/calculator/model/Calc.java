@@ -1,6 +1,4 @@
-package earth.curve.calculator;
-
-import android.util.Log;
+package earth.curve.calculator.model;
 
 import java.text.DecimalFormat;
 
